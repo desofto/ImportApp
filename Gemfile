@@ -18,6 +18,9 @@ gem 'draper'
 
 gem 'web-console', group: :development
 
+gem 'sidekiq'
+gem 'sidekiq_status', github: 'cryo28/sidekiq_status'
+
 group :development, :test do
   gem 'pry'
   gem 'spring'

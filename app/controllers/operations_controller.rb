@@ -8,9 +8,9 @@ class OperationsController < ApplicationController
   end
 
   def import
-    ::OperationsImporter.new(uploaded_file_name).import
+    id = ImportWorker.perform_async(uploaded_file_name)
 
-    redirect_to root_path
+    redirect_to root_path(jid: id)
   end
 
   private

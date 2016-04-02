@@ -10,8 +10,22 @@ class OperationsImporter
   def import
     clear_database
 
+    info = {
+      processed: 0,
+      successful: 0,
+      error: 0
+    }
+
     CSV.foreach(@file_name, headers: true) do |row|
-      import_row row.to_hash
+      begin
+        import_row row.to_hash
+        info[:successful] += 1
+      rescue
+        info[:error] += 1
+      ensure
+        info[:processed] += 1
+        yield info if block_given?
+      end
     end
   end
 
@@ -27,20 +41,17 @@ class OperationsImporter
     categories = categories.split(';'.freeze).map do |category_name|
       find_category(category_name)
     end
-    begin
-      Operation.create!(
-        company: find_company(row['company'.freeze]),
-        invoice_num: row['invoice_num'.freeze],
-        invoice_date: Time.zone.parse(row['invoice_date'.freeze]),
-        operation_date: Time.zone.parse(row['operation_date'.freeze]),
-        amount: row['amount'.freeze],
-        reporter: row['reporter'.freeze],
-        notes: row['notes'.freeze],
-        status: row['status'.freeze],
-        categories: categories
-      )
-    rescue
-    end
+    Operation.create!(
+      company: find_company(row['company'.freeze]),
+      invoice_num: row['invoice_num'.freeze],
+      invoice_date: Time.zone.parse(row['invoice_date'.freeze]),
+      operation_date: Time.zone.parse(row['operation_date'.freeze]),
+      amount: row['amount'.freeze],
+      reporter: row['reporter'.freeze],
+      notes: row['notes'.freeze],
+      status: row['status'.freeze],
+      categories: categories
+    )
   end
 
   def parse_date(date)
