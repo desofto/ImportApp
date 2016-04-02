@@ -40,4 +40,4 @@
           className: 'col-md-2'
           "Accepted: #{ @props.company.accepted }"
       if @state.open
-        React.createElement Operations, operations: @state.operations
+        React.createElement Operations, operations: @state.operations, filter: @props.filter
