@@ -1,0 +1,18 @@
+fields = {
+  company:        -> (i) { i.company.name },
+  invoice_num:    -> (i) { i.invoice_num },
+  invoice_date:   -> (i) { i.invoice_date },
+  operation_date: -> (i) { i.operation_date },
+  amount:         -> (i) { '%.2f' % i.amount },
+  reporter:       -> (i) { i.reporter },
+  notes:          -> (i) { i.notes },
+  status:         -> (i) { i.status },
+  kind:           -> (i) { i.categories.map(&:name).join(';') }
+}
+
+csv << fields.keys
+@operations.each do |operation|
+  csv << fields.map do |_name, value|
+    value.call(operation)
+  end
+end

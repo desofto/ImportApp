@@ -39,5 +39,11 @@
         React.DOM.div
           className: 'col-md-2'
           "Accepted: #{ @props.company.accepted }"
+        React.DOM.div
+          className: 'col-md-1'
+        React.DOM.a
+          className: 'btn btn-default'
+          href: "/companies/#{ @props.company.id }/operations.csv?filter=#{ @props.filter }"
+          'CSV'
       if @state.open
         React.createElement Operations, operations: @state.operations, filter: @props.filter

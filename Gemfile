@@ -21,6 +21,8 @@ gem 'web-console', group: :development
 gem 'sidekiq'
 gem 'sidekiq_status', github: 'cryo28/sidekiq_status'
 
+gem 'csv_builder'
+
 group :development, :test do
   gem 'pry'
   gem 'spring'

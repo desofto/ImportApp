@@ -1,9 +1,26 @@
 class OperationsController < ApplicationController
   def index
-    @operations = Company.find(params[:company_id]).operations
+    @company = Company.find(params[:company_id])
+    @operations = @company.operations
+
+    filter = params[:filter]
+    if filter.present?
+      mask = %r{#{filter.downcase}}
+      @operations = @operations.select do |o|
+        pass = o.status.downcase.match mask
+        pass ||= o.categories.map(&:name).join(';').downcase.match mask
+        pass ||= o.invoice_num.downcase.match mask
+        pass ||= o.reporter.downcase.match mask
+        pass
+      end
+    end
 
     respond_to do |format|
       format.json { render json: @operations.decorate.map(&:to_json) }
+      format.csv do
+        @filename = "#{@company.name}.csv"
+        @output_encoding = 'UTF-8'
+      end
     end
   end
 
