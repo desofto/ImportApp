@@ -1,0 +1,10 @@
+<%= react_component 'Companies', { data: @companies } %>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= form_tag(import_operations_path, multipart: true) do %>
+      <%= file_field_tag :file %>
+      <%= submit_tag('Import') %>
+    <% end %>
+  </div>
+</div>

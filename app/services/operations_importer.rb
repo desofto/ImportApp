@@ -1,3 +1,5 @@
+require 'csv'
+
 class OperationsImporter
   def initialize(file_name)
     @file_name = file_name

@@ -5,5 +5,9 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: 'operations#index', as: :root
+  resources :companies, only: [] do
+    resources :operations, only: [:index]
+  end
+
+  root to: 'companies#index', as: :root
 end

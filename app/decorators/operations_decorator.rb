@@ -1,0 +1,2 @@
+class OperationsDecorator < CollectionDecorator
+end

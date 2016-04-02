@@ -12,4 +12,10 @@ class Operation < ActiveRecord::Base
 
   validates :invoice_num,
     uniqueness: true
+
+  scope :in_current_month,
+    -> { where('operation_date >= ?'.freeze, Time.zone.today.beginning_of_month) }
+
+  scope :accepted,
+    -> { where(status: 'accepted'.freeze) }
 end
