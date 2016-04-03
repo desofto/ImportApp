@@ -8,7 +8,7 @@ class OperationsController < ApplicationController
       mask = %r{#{filter.downcase}}
       @operations = @operations.select do |o|
         pass = o.status.downcase.match mask
-        pass ||= o.categories.map(&:name).join(';').downcase.match mask
+        pass ||= o.categories.map(&:name).join(';'.freeze).downcase.match mask
         pass ||= o.invoice_num.downcase.match mask
         pass ||= o.reporter.downcase.match mask
         pass
