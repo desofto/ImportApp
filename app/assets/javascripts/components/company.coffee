@@ -3,18 +3,20 @@
   getInitialState: ->
     open: false
     operations: []
+    loading: false
 
   handleToggle: (e) ->
     e.preventDefault()
     if @state.open
       @setState open: false
     else
+      @setState loading: true
       $.ajax
         method: 'GET'
         url: "/companies/#{ @props.company.id }/operations"
         dataType: 'JSON'
         success: (data) =>
-          @setState operations: data, open: true
+          @setState operations: data, open: true, loading: false
 
   render: ->
     React.DOM.div
@@ -24,7 +26,7 @@
         React.DOM.div
           className: 'col-md-3'
           React.DOM.h4
-            className: 'name'
+            className: 'name ' + (if @state.open then 'open' else 'closed')
             onClick: @handleToggle
             @props.company.name
         React.DOM.div
@@ -45,5 +47,12 @@
           className: 'btn btn-default'
           href: "/companies/#{ @props.company.id }/operations.csv?filter=#{ @props.filter }"
           'CSV'
+      if @state.loading
+        React.DOM.div
+          className: 'row'
+          React.DOM.div
+            className: 'col-md-12'
+            React.DOM.img
+              src: '/assets/loading-line.gif'
       if @state.open
         React.createElement Operations, operations: @state.operations, filter: @props.filter

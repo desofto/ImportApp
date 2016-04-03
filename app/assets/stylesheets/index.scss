@@ -1,6 +1,11 @@
 .company {
   .name {
-    cursor: pointer;
+    &.open {
+      cursor: zoom-out;
+    }
+    &.closed {
+      cursor: zoom-in;
+    }
   }
 }
 
