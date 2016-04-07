@@ -18,4 +18,10 @@ class Operation < ActiveRecord::Base
 
   scope :accepted,
     -> { where(status: 'accepted'.freeze) }
+
+  scope :search, lambda { |term|
+    fields = %w(status invoice_num reporter categories.name)
+    conditions = fields.map { |field| "#{field} ilike :term" }
+    joins(:categories).where(conditions.join(' or '), term: "%#{term}%")
+  }
 end

@@ -4,9 +4,11 @@ class ImportWorker
 
   def perform(file_name)
     self.payload = {}
+    return unless File.exists? file_name
     ::OperationsImporter.new(file_name).import do |info|
       self.payload = info
     end
-  rescue
+  rescue Errno::ENOENT, CSV::MalformedCSVError
+    # Do not continue if file cannot be processed
   end
 end

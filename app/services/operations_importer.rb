@@ -20,7 +20,7 @@ class OperationsImporter
       begin
         import_row row.to_hash
         info[:successful] += 1
-      rescue
+      rescue ActiveRecord::RecordInvalid
         info[:error] += 1
       ensure
         info[:processed] += 1
@@ -44,13 +44,13 @@ class OperationsImporter
     Operation.create!(
       company: find_company(row['company'.freeze]),
       invoice_num: row['invoice_num'.freeze],
-      invoice_date: Time.zone.parse(row['invoice_date'.freeze]),
-      operation_date: Time.zone.parse(row['operation_date'.freeze]),
+      invoice_date: parse_date(row['invoice_date'.freeze]),
+      operation_date: parse_date(row['operation_date'.freeze]),
       amount: row['amount'.freeze],
       reporter: row['reporter'.freeze],
       notes: row['notes'.freeze],
       status: row['status'.freeze],
-      categories: categories
+      categories: categories.uniq
     )
   end
 
@@ -62,7 +62,7 @@ class OperationsImporter
 
   def try_parse_date(date, format)
     Date.strptime(date, format)
-  rescue ArgumentError
+  rescue ArgumentError, TypeError
     nil
   end
 
@@ -71,6 +71,6 @@ class OperationsImporter
   end
 
   def find_category(name)
-    @cache_categories[name] ||= Category.find_or_create(name)
+    @cache_categories[name] ||= Category.find_or_create_by(name: name)
   end
 end

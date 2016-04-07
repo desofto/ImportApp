@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: container.payload
+        render json: container.payload.merge(status: container.status)
       end
     end
   end

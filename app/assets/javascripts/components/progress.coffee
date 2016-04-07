@@ -18,13 +18,14 @@
   tick: ->
     $.ajax
       method: 'GET'
-      url: "/stats"
+      url: '/stats'
       dataType: 'JSON'
       data:
         jid: @props.id
       success: (data) =>
         @setState info: data
-        @requestStats()
+        if data.status != 'complete'# && data.status != 'failed'
+          @requestStats()
 
   render: ->
     React.DOM.div

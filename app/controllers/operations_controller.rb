@@ -1,19 +1,10 @@
 class OperationsController < ApplicationController
   def index
     @company = Company.find(params[:company_id])
-    @operations = @company.operations
+    @operations = @company.operations.includes(:categories)
 
     filter = params[:filter]
-    if filter.present?
-      mask = %r{#{filter.downcase}}
-      @operations = @operations.select do |o|
-        pass = o.status.downcase.match mask
-        pass ||= o.categories.map(&:name).join(';'.freeze).downcase.match mask
-        pass ||= o.invoice_num.downcase.match mask
-        pass ||= o.reporter.downcase.match mask
-        pass
-      end
-    end
+    @operations = @operations.search(filter) if filter.present?
 
     respond_to do |format|
       format.json { render json: @operations.decorate.map(&:to_json) }
