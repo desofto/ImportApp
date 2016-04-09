@@ -53,6 +53,6 @@
           React.DOM.div
             className: 'col-md-12'
             React.DOM.img
-              src: '/assets/loading-line.gif'
+              src: '<%= asset_path('loading-line.gif') %>'
       if @state.open
         React.createElement Operations, operations: @state.operations, filter: @props.filter

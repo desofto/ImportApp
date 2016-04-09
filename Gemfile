@@ -25,6 +25,16 @@ gem 'bullet', group: :development
 
 gem 'csv_builder'
 
+gem 'capistrano'
+gem 'capistrano-rvm'
+gem 'capistrano-bundler'
+gem 'capistrano-rails'
+
+group :production do
+  gem 'rake'
+  gem 'rspec'
+end
+
 group :development, :test do
   gem 'pry'
   gem 'spring'
